@@ -1,10 +1,12 @@
 import React from 'react';
+import FriendCard from './FriendCard';
 
 const FriendsList = props => {
-    console.log('FriendsList props', props)
     return (
         <div className="friends-list">
-            <h2>Friends List Component</h2>
+            {props.friends.map(friend => (
+                <FriendCard friend={friend} key={friend.id} />
+            ))}
         </div>
     );
 }
