@@ -13,14 +13,14 @@ class App extends Component {
     componentDidMount() {
         axios
             .get('http://localhost:5000/friends')
-            .then(response => console.log('Response: ', response))
+            .then(response => this.setState({ friends: response.data }))
             .catch(err => console.log('Error: ', err));
     }
 
     render() {
         return (
             <div className="App">
-                <h1>App.js</h1>
+                <h1>Friends</h1>
             </div>
         );
     }
