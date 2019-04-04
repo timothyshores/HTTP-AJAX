@@ -11,6 +11,8 @@ class App extends Component {
             name: '',
             age: '',
             email: '',
+            id: '',
+            update: false,
         }
     }
 
@@ -23,22 +25,44 @@ class App extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        axios
-            .post(`http://localhost:5000/friends`,
-                {
-                    name: this.state.name,
-                    age: this.state.age,
-                    email: this.state.email,
+        if (!this.state.update) {
+            axios
+                .post(`http://localhost:5000/friends`,
+                    {
+                        name: this.state.name,
+                        age: this.state.age,
+                        email: this.state.email,
+                    })
+                .then(response => {
+                    this.setState({
+                        friends: response.data,
+                        name: '',
+                        age: '',
+                        email: '',
+                    })
                 })
-            .then(response => {
-                this.setState({
+                .catch(err => { console.log(err) });
+        }
+        else {
+            axios
+                .put(`http://localhost:5000/friends/${this.state.id}`,
+                    {
+                        name: this.state.name,
+                        age: this.state.age,
+                        email: this.state.email,
+                        id: this.state.id,
+                    }
+                )
+                .then(response => this.setState({
                     friends: response.data,
                     name: '',
                     age: '',
                     email: '',
-                })
-            })
-            .catch(err => { console.log(err) });
+                    id: '',
+                    update: false,
+                }))
+                .catch(err => console.log(err));
+        }
     }
 
     handleChange = event => {
@@ -53,6 +77,22 @@ class App extends Component {
             .catch(err => console.log(err));
     }
 
+    updateFriend = id => {
+        if (!this.state.update) {
+            const { name, age, email } = this.state.friends.filter(friend => friend.id === id)[0];
+            this.setState({ name, age, email, id: id, update: !this.state.update });
+        }
+        else {
+            this.setState({
+                name: '',
+                age: '',
+                email: '',
+                id: '',
+                update: !this.state.update
+            })
+        }
+    }
+
     render() {
         return (
             <div className="App">
@@ -63,10 +103,13 @@ class App extends Component {
                     name={this.state.name}
                     email={this.state.email}
                     age={this.state.age}
+                    friends={this.state.friends}
                 />
                 <FriendsList
                     friends={this.state.friends}
                     deleteFriend={this.deleteFriend}
+                    updateFriend={this.updateFriend}
+                    update={this.state.update}
                 />
             </div>
         );

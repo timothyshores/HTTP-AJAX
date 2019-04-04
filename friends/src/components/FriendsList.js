@@ -9,6 +9,8 @@ const FriendsList = props => {
                     friend={friend}
                     key={friend.id}
                     deleteFriend={props.deleteFriend}
+                    updateFriend={props.updateFriend}
+                    update={props.update}
                 />
             ))}
         </div>
