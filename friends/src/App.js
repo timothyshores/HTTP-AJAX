@@ -22,7 +22,23 @@ class App extends Component {
     }
 
     handleSubmit = event => {
-        console.log(event);
+        event.preventDefault();
+        axios
+            .post(`http://localhost:5000/friends`,
+                {
+                    name: this.state.name,
+                    age: this.state.age,
+                    email: this.state.email,
+                })
+            .then(response => {
+                this.setState({
+                    friends: response.data,
+                    name: '',
+                    age: '',
+                    email: '',
+                })
+            })
+            .catch(err => { console.log(err) });
     }
 
     handleChange = event => {
